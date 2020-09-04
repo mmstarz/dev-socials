@@ -1,0 +1,56 @@
+# BASIC PREPARATIONS #
+1. make new project at postman
+2. create new project and cluster at mongodb.
+3. create cluster superuser at mongodb. (mmstar , 4ebyrawka)
+4. set ip Whitelist your ip address.
+5. get mongo connection string. 
+(clusters -> connect -> connect your application)
+mongodb+srv://mmstar:<password>@app-02.zmzxb.mongodb.net/<dbname>?retryWrites=true&w=majority
+
+# PACKAGES #
+1. express - http://expressjs.com
+2. express-validator - https://express-validator.github.io/docs/
+3. mongoose - http://mongoosejs.com
+4. jsonwebtoken - https://github.com/auth0/node-jsonwebtoken#readme
+5. bcryptjs - https://github.com/dcodeIO/bcrypt.js#readme
+6. config(this is for global variables) - https://lorenwest.github.io/node-config/ 
+7. gravatar(this is for profile avatar url) - https://github.com/emerleite/node-gravatar#readme
+8. request(small package that allow to make http request for another api. this is for github repositories links)
+9. nodemon - https://nodemon.io/
+10. concurrently - https://github.com/kimmobrunfeldt/concurrently#readme
+
+
+# NODE SERVER #
+1. create .gitignore file
+2. npm init
+3. npm install --save express express-validator mongoose jsonwebtoken bcryptjs config gravatar request
+4. npm install --save-dev nodemon concurrently
+5. create server.js (main entry file with basic express setup):
+
+const express = require("express");
+
+const app = express();
+
+app.get("/", (req, res, next) => {
+  res.send("API Running");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server started at ${PORT}`);
+});
+
+6. update scripts at package.json:
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "dev": "concurrently \"npm run server\""
+},
+
+7. npm run server (test node server is running)
+
+# PROGRESS #
+
+12.1 - ? --no current tasks--

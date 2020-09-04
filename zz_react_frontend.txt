@@ -1,0 +1,356 @@
+#####################################################################
+##                                                                 ##
+##  CLIENT PART 1 (preparations)                                   ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. React & Concurrently setup
+2. Clean Up & Initial Components
+3. React router setup
+4. Register form useState hook
+5. Request example and login form
+
+IMPLEMENTATION:
+
+===========================================
+1. React & Concurrently setup
+===========================================
+
+0. > npm uninstall -g create-react-app
+   > npm cache clean
+   > npm cache verify
+1. open cmder 
+   > which create-react-app (if there will be a path)
+    go to that folder and manually delete create-react-app files
+2. > npx create-react-app client --use-npm
+3. > cd client
+4. > delete .gitignore & README.md
+5. > rm -rf .git
+6. > npm install axios react-router-dom redux react-redux redux-thunk redux-devtools-extension moment react-moment @material-ui/core @material-ui/icons uuid --save
+
+update scripts at app-02/package.json:
+...
+"scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+},
+...
+
+update proxy setup at app-02/client/package.json:
+...
+"proxy": "http://localhost:5000"
+...
+
+
+===========================================
+2.3.4.5
+===========================================
+
+cd app-02/client/src
+delete files: App.test.js index.css logo.svg serviceWorker.js setupTests.js
+
+# root #
+create & update app-02\client\src\index.js
+
+# layout #
+create & update app-02\client\src\components\layout\layout.js
+create & update app-02\client\src\components\layout\landing.js
+create & update app-02\client\src\components\layout\header.js
+create & update app-02\client\src\components\layout\footer.js
+
+# navigation menus and media sizes #
+create & update app-02\client\src\components\navigation\navigation.js
+create & update app-02\client\src\components\navigation\mobBar.js
+create & update app-02\client\src\components\navigation\wideBar.js
+create & update app-02\client\src\components\navigation\sideBar.js
+
+# routes #
+create and update app-02\client\src\routes\routes.js
+
+# auth & forms #
+create and update app-02\client\src\components\auth\login.js
+create and update app-02\client\src\components\auth\register.js
+
+# widgets #
+create and update app-02\client\src\widgets\withStyles\withStyles.js
+
+#####################################################################
+##                                                                 ##
+##  CLIENT PART 2 (Redux init and connect)                         ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. Creating a Redux Store
+2. Alert Reducer, Action & Types
+3. Alert Component & Action call
+
+IMPLEMENTATION:
+
+===========================================
+1.2.3 
+===========================================
+
+# init file #
+create & update app-02\client\src\store\store.js:
+
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+// root reducer
+import rootReducer from "./reducers/index.js";
+// initial state
+const initialState = {};
+// middlewares
+const middlewares = [thunk];
+// create store general ver.
+const store = createStore(rootReducer, initialState, applyMiddleware(...middlewares));
+export default store;
+
+# connect to application #
+update app-02\client\src\index.js:
+...
+// redux
+import { Provider } from "react-redux";
+import store from "./store/store";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store} >
+      <Router>
+        <Fragment>
+          <Routes />
+        </Fragment>
+      </Router>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+# reducers #
+create & update app-02\client\src\store\reducers\index.js
+create & update app-02\client\src\store\reducers\alertReducer.js
+
+# actions #
+create & update app-02\client\src\store\actions\types.js
+create & update app-02\client\src\store\actions\alertActions.js
+
+# use redux in component #
+update app-02\client\src\components\auth\register.js
+create & update app-02\client\src\components\layout\notifications.js
+
+# add notifications to layout #
+update app-02\client\src\components\layout\layout.js
+
+#####################################################################
+##                                                                 ##
+##  CLIENT PART 3 (Auth / Login / Logout)                          ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. Auth reducer & Register action
+2. Load user & set Auth Token
+3. User Login & NavLinks
+4. User Logout & NavLinks
+
+IMPLEMENTATION:
+
+===========================================
+1.2.3.4
+===========================================
+
+# define new action types #
+update app-02\client\src\store\actions\types.js
+
+# create utils auth.js helper file #
+create & update app-02\client\src\utils\auth.js
+
+# create Auth reducer #
+create & update app-02\client\src\store\reducers\authReducer.js
+
+# create Auth action #
+create & update app-02\client\src\store\actions\authActions.js
+
+# combine reducers #
+update app-02\client\src\store\reducers\index.js
+
+# connect redux state & actions to components #
+update app-02\client\src\index.js
+update app-02\client\src\components\auth\register.js
+update app-02\client\src\components\auth\login.js
+
+# update navlinks # 
+update app-02\client\src\components\navigation\navigation.js
+update app-02\client\src\components\navigation\mobBar.js
+update app-02\client\src\components\navigation\wideBar.js
+
+#####################################################################
+##                                                                 ##
+##  CLIENT PART 4 (Profile / Education / Experiences / Deletion )  ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. Protected route for Dashboard
+2. Profile reducer & get current Profile
+3. Starting on the Dashboard
+4. CreateProfile component
+5. CreateProfile action
+6. Edit Profile
+7. Add Education & Experience
+8. List Education & Experiences
+9. Delete Education, Experiences and Account
+
+IMPLEMENTATION:
+
+===========================================
+1. ... 9.
+===========================================
+
+# update routes #
+update app-02\client\src\routes\routes.js
+
+# create profile reducer #
+create & update app-02\client\src\store\reducers\updProfileReducer.js
+
+# combine profile reducer into root reducer #
+update app-02\client\src\store\reducers\index.js
+
+# create new action types #
+update app-02\client\src\store\actions\types.js
+
+# create profile actions #
+create & update app-02\client\src\store\actions\profileActions.js
+
+# create profile && profiles components #
+create app-02\client\src\components\profiles\profilesWrapper.js
+create app-02\client\src\components\profiles\profilesItem.js
+
+create app-02\client\src\components\profile\profileWrapper.js
+
+create app-02\client\src\components\profile\main\mainWrapper.js
+create app-02\client\src\components\profile\main\topSection.js
+create app-02\client\src\components\profile\main\topSectionTitle.js
+create app-02\client\src\components\profile\main\topSectionSub.js
+create app-02\client\src\components\profile\main\skillsSection.js
+create app-02\client\src\components\profile\main\bioSection.js
+
+create app-02\client\src\components\profile\education\eduWrapper.js
+create app-02\client\src\components\profile\education\eduSection.js
+create app-02\client\src\components\profile\education\eduItem.js
+create app-02\client\src\components\profile\education\eduDetails.js
+
+create app-02\client\src\components\profile\experience\expWrapper.js
+create app-02\client\src\components\profile\experience\expSection.js
+create app-02\client\src\components\profile\experience\expItem.js
+create app-02\client\src\components\profile\experience\expDetails.js
+
+create app-02\client\src\components\profile\repos\reposWrapper.js
+create app-02\client\src\components\profile\repos\reposSection.js
+create app-02\client\src\components\profile\repos\reposItem.js
+
+#####################################################################
+##                                                                 ##
+##  CLIENT PART 5 (Posts && Comments )                             ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. Post Reducer, Actions, Initial Component
+2. Post Item Component
+3. Like && Unlike functionality
+4. Deleting Posts
+5. Adding Posts
+6. Single Post display
+7. Adding Comments
+8. Comment display and delete
+
+IMPLEMENTATION:
+
+===========================================
+1. ... 8.
+===========================================
+
+# update routes #
+update app-02\client\src\routes\routes.js
+
+# update navigation #
+update app-02\client\src\components\navigation\navigation.js
+
+# create post reducer #
+create & update app-02\client\src\store\reducers\postReducer.js
+
+# combine profile reducer into root reducer #
+update app-02\client\src\store\reducers\index.js
+
+# create new action types #
+update app-02\client\src\store\actions\types.js
+
+# create profile actions #
+create & update app-02\client\src\store\actions\postActions.js
+
+# create posts && posts components #
+create app-02\client\src\components\posts\postsWrapper.js
+create app-02\client\src\components\posts\postsItem.js
+create app-02\client\src\components\posts\addPost.js
+
+create app-02\client\src\components\post-forms\createPost.js
+create app-02\client\src\components\post-forms\addComment.js
+create app-02\client\src\components\post-inputs\postInputs.js
+
+create app-02\client\src\components\posts\post\postWrapper.js
+create app-02\client\src\components\posts\post\postItem.js
+create app-02\client\src\components\posts\post\addComment.js
+
+create app-02\client\src\components\posts\comments\commentsWrapper.js
+create app-02\client\src\components\posts\comments\commentsItem.js
+
+#####################################################################
+##                                                                 ##
+##  CLIENT PART 6 (Deployment preparations)                        ##
+##                                                                 ##
+#####################################################################
+
+SOLUTIONS:
+1. create build locally and deploy to app to server
+2. deploy app to server with postbuild script
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%!!!      SOL 1       !!!%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+STEPS:
+1. create build
+
+IMPLEMENTATION:
+
+===========================================
+1. create build
+===========================================
+
+npm run build
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%!!!      SOL 2       !!!%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+STEPS:
+1. update packjage.json
+
+IMPLEMENTATION:
+
+===========================================
+1. update packjage.json
+===========================================
+
+(tell heroku to install dependencies for client folder and create build)
+app-02/package.json
+
+{
+  ...
+  "scripts":
+  ...
+  "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix client && npm run build --prefix client"
+}

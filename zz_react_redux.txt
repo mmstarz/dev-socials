@@ -1,0 +1,60 @@
+STEPS:
+1. Creating a Redux Store
+2. Alert Reducer, Action & Types
+3. Alert Component & Action call
+
+IMPLEMENTATION:
+
+===========================================
+1. Creating a Redux Store
+===========================================
+
+# init file #
+create & update app-02\client\src\store\store.js:
+
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+// root reducer
+import rootReducer from "./reducers/index.js";
+// initial state
+const initialState = {};
+// middlewares
+const middlewares = [thunk];
+// create store general ver.
+const store = createStore(rootReducer, initialState, applyMiddleware(...middlewares));
+export default store;
+
+# connect to application #
+update app-02\client\src\index.js:
+...
+// redux
+import { Provider } from "react-redux";
+import store from "./store/store";
+
+ReactDOM.render(
+  <React.StrictMode>
+    <Provider store={store} >
+      <Router>
+        <Fragment>
+          <Routes />
+        </Fragment>
+      </Router>
+    </Provider>
+  </React.StrictMode>,
+  document.getElementById("root")
+);
+
+# reducers #
+create & update app-02\client\src\store\reducers\index.js
+create & update app-02\client\src\store\reducers\alertReducer.js
+
+# actions #
+create & update app-02\client\src\store\actions\types.js
+create & update app-02\client\src\store\actions\alertActions.js
+
+# use redux in components #
+update app-02\client\src\components\auth\register.js
+create & update app-02\client\src\components\layout\notifications.js
+
+# add notifications to layout #
+update app-02\client\src\components\layout\layout.js

@@ -1,0 +1,294 @@
+##############################################
+##                                          ##
+##  SERVER PART 1 (connect mongo basics)    ##
+##                                          ##
+##############################################
+
+STEPS:
+create ./config folder
+1. create ./config/default.json file (this will contain settings)
+2. create ./config/db.js (this wil provide mongo settings to server)
+3. update server.js
+
+IMPLEMENTATION:
+===========================================
+1. ./config/default.json: 
+===========================================
+{
+    "mongoURI": "...longstring"
+}
+
+===========================================
+2. ./config/db.js:
+===========================================
+const mongoose = require("mongoose");
+const settings = require("config");
+const db = settings.get("mongoURI"); // get access string from config file
+
+// connect to database
+const connectDB = async () => {
+  try {
+    // connect() - returns a promise
+    await mongoose.connect(db, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+      useCreateIndex: true,
+    });
+    console.log("MongoDB connected...");
+  } catch (err) {
+    // err object have a message prop
+    console.error(err.message);
+    // exit process with failure
+    process.exit(1);
+  }
+};
+
+module.exports = connectDB;
+
+
+===========================================
+3. server.js:
+===========================================
+const express = require("express");
+const connectDB = require('./config/db');
+
+// server logic starts here
+const app = express();
+
+// connect database
+connectDB();
+
+app.get("/", (req, res, next) => {
+  res.send("API Running");
+});
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server started at ${PORT}`);
+});
+
+
+# SERVER PART 2 (setup endpoints basics) #
+
+##############################################
+##                                          ##
+##  SERVER PART 2 (setup endpoints basics)  ##
+##                                          ##
+##############################################
+
+STEPS:
+create ./routes/api folder
+1. create ./routes/api/auth.js file
+2. create ./routes/api/users.js file
+3. create ./routes/api/posts.js file
+4. create ./routes/api/profile.js file
+5. update server.js
+
+IMPLEMENTATION:
+
+===========================================
+1. create ./routes/api/auth.js file:
+===========================================
+const express = require('express');
+// define router
+const router = express.Router();
+// @route       GET api/auth
+// @access      Public (no auth needed)
+// @desc        test route
+router.get('/', (req, res, next) => res.send('Token get route'));
+module.exports = router;
+
+===========================================
+2. create ./routes/api/users.js file:
+===========================================
+const express = require('express');
+// define router
+const router = express.Router();
+// @route       GET api/users
+// @access      Public (no auth needed)
+// @desc        test route
+router.get('/', (req, res, next) => res.send('Users get route'));
+module.exports = router;
+
+===========================================
+3. create ./routes/api/posts.js file:
+===========================================
+const express = require('express');
+// define router
+const router = express.Router();
+// @route       GET api/posts
+// @access      Public (no auth needed)
+// @desc        test route
+router.get('/', (req, res, next) => res.send('Posts get route'));
+module.exports = router;
+
+===========================================
+4. create ./routes/api/profile.js file:
+===========================================
+const express = require('express');
+// define router
+const router = express.Router();
+// @route       GET api/profile
+// @access      Public (no auth needed)
+// @desc        test route
+router.get('/', (req, res, next) => res.send('Profile get route'));
+module.exports = router;
+
+===========================================
+5. update server.js:
+===========================================
+const express = require("express");
+const connectDB = require('./config/db');
+// server logic starts here
+const app = express();
+// connect database
+connectDB();
+app.get("/", (req, res, next) => {
+  res.send("API Running");
+});
+// define routes
+app.use('/api/auth', require('./routes/api/auth'));
+app.use('/api/users', require('./routes/api/users'));
+app.use('/api/posts', require('./routes/api/posts'));
+app.use('/api/profile', require('./routes/api/profile'));
+
+const PORT = process.env.PORT || 5000;
+
+app.listen(PORT, () => {
+  console.log(`Server started at ${PORT}`);
+});
+
+
+#####################################################################
+##                                                                 ##
+##  SERVER PART 3 (user model/validation/register/JWT/auth/login)  ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. creating user model
+2. request & body validation
+3. user registration
+4. set sending back JWT
+5. set custom auth mw checkup in ./utils/auth.js
+6. update ./routes/api/auth.js
+7. create login route at ./routes/api/auth.js
+
+
+IMPLEMENTATION:
+
+===========================================
+1. creating user model
+===========================================
+
+app-02/models/User.js
+
+==========================================================
+2.3.4 request & body validation / register / JWT
+==========================================================
+
+app-02/routes/api/users.js
+
+==========================================================
+5. set custom auth mw checkup in ./utils/auth.js
+==========================================================
+
+app-02/utils/auth.js
+
+==========================================================
+6.7. update ./routes/api/auth.js
+==========================================================
+
+app-02/routes/api/auth.js
+
+
+#####################################################################
+##                                                                 ##
+##  SERVER PART 4 (Profile Model / Profile router endpoints)       ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. creating Profile Model
+2. get current User Profile
+3. create & update Profile routes
+4. get all profiles & profile by user ID
+5. delete profile & user
+6. add profile experience
+7. delete profile eperience
+8. add & delete profile education
+9. get gitHub repos for profile
+
+IMPLEMENTATION:
+
+===========================================
+1. creating Profile Model
+===========================================
+
+app-02/models/Profile.js
+
+===========================================
+2.3.4.5.6.7.8.9
+===========================================
+
+app-02/routes/api/profile.js
+
+
+#####################################################################
+##                                                                 ##
+##  SERVER PART 5 (Post Model / Posts router endpoints)            ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. creating the Post model
+2. add post route
+3. get & delte post routes
+4. post like & unlike routes
+5. post add & remove comments routes
+
+IMPLEMENTATION:
+
+===========================================
+1. creating the Post model
+===========================================
+
+app-02/models/Post.js
+
+===========================================
+2.3.4.5 
+===========================================
+
+app-02/routes/api/posts.js
+
+#####################################################################
+##                                                                 ##
+##  SERVER PART 6 (Deploy preparations)                            ##
+##                                                                 ##
+#####################################################################
+
+STEPS:
+1. creating production config file
+2. update .gitignore file
+3. update server.js file for production
+
+IMPLEMENTATION:
+
+===========================================
+1. creating production config file
+===========================================
+
+app-02/config/production.json
+
+===========================================
+2. update .gitignore file
+===========================================
+
+app-02/.gitignore
+
+===========================================
+3. update server.js file for production
+===========================================
+
+app-02/server.js

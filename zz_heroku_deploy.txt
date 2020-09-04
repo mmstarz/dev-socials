@@ -1,0 +1,11 @@
+1. login to your heroku account
+2. create new project
+3. open project deploy tab
+    copy remote repository address:
+        exmpl.:
+            heroku git:remote -a <heroku_project_name>
+4. go to your local project folder > open terminal:
+    $ git add .
+    $ git commit -m "prepare for deployment"
+    $ heroku git:remote -a <heroku_project_name>
+    $ git push heroku master
