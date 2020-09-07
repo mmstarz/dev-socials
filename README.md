@@ -1,5 +1,6 @@
 # dev-socials
 simple react social network app
+
 app basis taken from course:
 https://www.udemy.com/course/mern-stack-front-to-back/
 
